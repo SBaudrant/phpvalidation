@@ -30,7 +30,11 @@ if (isset($_POST['title'])) {
 
 <h1>Page creation</h1>
 
+<<<<<<< HEAD
 <a href="/back/list.php">List / delete pages</a>
+=======
+<a href="/back/list.php">List/delete pages</a>
+>>>>>>> b3ad9db1e7a668046912a06a1cf10ee5c71f5ecb
 
 <p><?= $msg ?></p>
 
