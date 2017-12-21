@@ -5,16 +5,21 @@ if( !isset($_COOKIE['loged']) || !($_COOKIE['loged']!="true"))  {
   exit();
 }
 
-$msg = '';
-
-if (isset($_POST['title'])) {
-    include_once ('../engine.php');
-    file_put_contents("../" . $_POST['title'] . ".html", $_POST['content']);
-
-    file_put_contents("../" . $_POST['title'] . ".html", render_template("../" . $_POST['title'] . ".html", $_POST['title']));
-
-    $msg .= "Page " . $_POST['title'] . ".html created";
+if (isset($_POST['page'])) {
+    unlink("../" . $_POST['page']);
 }
+
+$dir = opendir('..');
+
+$pages = [];
+
+while (($file = readdir($dir)) !== false) {
+    if (strpos($file, '.html')) {
+        array_push($pages, $file);
+    }
+}
+
+closedir($dir);
 
 ?>
 
@@ -22,17 +27,17 @@ if (isset($_POST['title'])) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Create Pages</title>
+    <title>List pages</title>
     <link href="https://fonts.googleapis.com/css?family=Vast+Shadow" rel="stylesheet">
     <link rel="stylesheet" href="/main.css">
 </head>
 <body>
 
-<h1>Page creation</h1>
+<h1>Page list</h1>
 
-<a href="/back/list.php">List/delete pages</a>
+<a href="/back/create.php">Create a page</a>
 
-
+<br>
 <ul class="lightrope">
     <li></li>
     <li></li>
@@ -77,16 +82,23 @@ if (isset($_POST['title'])) {
     <li></li>
     <li></li>
 </ul>
+<br>
 
+<?php
 
-<p><?= $msg ?></p>
+foreach ($pages as $page) {
+    echo "<div class='underTheGuirlande'>";
+    echo "<a style='display: inline' href='/$page'>$page</a>";
+    ?>
+    <form method="post" style="display: inline">
+        <input type="hidden" name="page" value="<?= $page ?>">
+        <input type="submit" value="X">
+    </form>
+    <?php
+    echo "</div>";
+}
 
-<form action="" method="post">
-    <input type="text" name="title" placeholder="title">
-    <textarea name="content" id="content" placeholder="Content (.template)" cols="50" rows="14"></textarea>
-    <input type="submit">
-</form>
-<h1>Readme</h1>
-<iframe src="/readme.html" width="100%" height="300px"></iframe>
+?>
+
 </body>
 </html>
